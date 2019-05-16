@@ -3,11 +3,8 @@
 #admin@zhetenger.com
 #http://www.terryche.me/openwrt-dnspod-ddns.html
 
-#dnspod帐号名
-email=`uci get dnspod.base_arg.login_email`
-
-#dnspod密码
-password=`uci get dnspod.base_arg.login_password 2>/dev/null`
+#dnspod login_token
+token=`uci get dnspod.base_arg.login_token`
 
 #域名
 domainname=`uci get dnspod.base_arg.main_domain 2>/dev/null`
@@ -30,10 +27,9 @@ API_url="https://dnsapi.cn"
 format='json'
 lang='en'
 record_type='A'
-offset="2"
+offset="0"
 length=""
-common_options="--data-urlencode \"login_email=${email}\"\
-				--data-urlencode \"login_password=${password}\"\
+common_options="--data-urlencode \"login_token=${token}\"\
 				--data-urlencode \"format=${format}\"\
 				--data-urlencode \"lang=${lang}\""
 PROGRAM=$(basename $0)
@@ -93,7 +89,7 @@ getRecordId() {
 			[ $numofline -eq 3 ] && tmp_result_id="$(getJsonValue id | sed '/^[0-9]\{7\}$/d' | head -n1 )" || continue
 		else
 			tmp_result_id="$(getJsonValue id | sed '/^[0-9]\{7\}$/d')"
-		fi	
+		fi
 		#if result_id is not empty or unset, append a space to split record id
 		result_id="${result_id:+${result_id} }${tmp_result_id}"
 	done
@@ -120,6 +116,7 @@ updateRecord() {
 						--data-urlencode \"value=${pub_ip_addr}\"\
 						--data-urlencode \"mx=1\""
 		json_data=$(execAPI "Record.Modify" "${extra_options}")
+		
 		printMsg "Update [${tmp_sub_domains}.${domainname}] ${record_type} record to [${pub_ip_addr}] : $(getJsonValue message)"
 	done
 	printMsg 'Update records finish'
