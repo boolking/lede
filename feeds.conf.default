@@ -1,4 +1,4 @@
 src-git packages https://github.com/boolking/packages;release-20191226
 src-git luci https://github.com/boolking/luci;release-20191226
-src-git routing https://github.com/boolking/feed/routing.git;release-20191226
+src-git routing https://github.com/boolking/routing.git;release-20191226
 #src-git telephony https://git.openwrt.org/feed/telephony.git;release-20191226
