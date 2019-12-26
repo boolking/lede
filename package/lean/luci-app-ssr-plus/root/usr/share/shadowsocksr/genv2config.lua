@@ -1,7 +1,7 @@
 local ucursor = require "luci.model.uci".cursor()
 local json = require "luci.jsonc"
 local server_section = arg[1]
-local proto = arg[2] 
+local proto = arg[2]
 local local_port = arg[3]
 
 local server = ucursor:get_all("shadowsocksr", server_section)
@@ -12,17 +12,33 @@ local v2ray = {
     loglevel = "warning"
   },
     -- 传入连接
-    inbound = {
-        port = local_port,
-        protocol = "dokodemo-door",
-        settings = {
-            network = proto,
-            followRedirect = true
+    inbounds = {
+        {
+            port = local_port,
+            protocol = "dokodemo-door",
+            settings = {
+                network = proto,
+                followRedirect = true
+            },
+            sniffing = {
+                enabled = true,
+                destOverride = { "http", "tls" }
+            }
         },
-        sniffing = {
-            enabled = true,
-            destOverride = { "http", "tls" }
-        }
+        (proto == "tcp") and (server.socks5_port ~= nil) and {
+            port = server.socks5_port,
+            protocol = "socks",
+            settings = {
+                auth = "noauth"
+            }
+        } or nil,
+        (proto == "tcp") and (server.http_port ~= nil) and {
+            port = server.http_port,
+            protocol = "http",
+            settings = {
+                timeout = 0
+            }
+        } or nil,
     },
     -- 传出连接
     outbound = {

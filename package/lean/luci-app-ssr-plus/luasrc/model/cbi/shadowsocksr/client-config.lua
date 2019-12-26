@@ -31,7 +31,7 @@ local encrypt_methods = {
 	"aes-256-cfb",
 	"aes-128-ctr",
 	"aes-192-ctr",
-	"aes-256-ctr",	
+	"aes-256-ctr",
 	"bf-cfb",
 	"camellia-128-cfb",
 	"camellia-192-cfb",
@@ -105,7 +105,7 @@ local securitys = {
 m = Map(shadowsocksr, translate("Edit ShadowSocksR Server"))
 m.redirect = luci.dispatcher.build_url("admin/services/shadowsocksr/servers")
 if m.uci:get(shadowsocksr, sid) ~= "servers" then
-	luci.http.redirect(m.redirect) 
+	luci.http.redirect(m.redirect)
 	return
 end
 
@@ -352,6 +352,18 @@ o.default = "0"
 o:depends("type", "v2ray")
 o:depends("type", "trojan")
 
+o = s:option(Value, "socks5_port", translate("Socks5 Port"))
+o.datatype = "uinteger"
+o.rmempty = true
+o.default = "1080"
+o:depends("type", "v2ray")
+
+o = s:option(Value, "http_port", translate("HTTP Port"))
+o.datatype = "uinteger"
+o.rmempty = true
+o.default = "8080"
+o:depends("type", "v2ray")
+
 o = s:option(Value, "concurrency", translate("Concurrency"))
 o.datatype = "uinteger"
 o.rmempty = true
@@ -391,7 +403,7 @@ function o.validate(self, value, section)
     if not fs.access(kcp_file)  then
         return nil, translate("Haven't a Kcptun executable file")
     elseif  not isKcptun(kcp_file) then
-        return nil, translate("Not a Kcptun executable file")    
+        return nil, translate("Not a Kcptun executable file")
     end
     end
 
