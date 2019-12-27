@@ -1,0 +1,11 @@
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -45,7 +45,7 @@
+ #include	<errno.h>
+ #include	<string.h>
+ #include	<syslog.h>
+-#ifdef __GLIBC__
++#if 1
+ /* Newer glibc requires sys/sysmacros.h directly for makedev() */
+ #include	<sys/sysmacros.h>
+ #endif
